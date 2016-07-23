@@ -26,33 +26,6 @@ export default {
   },
 
   /**
-   * Takes an unlimited number of arguments. (key, key, key, ... , fn)
-   * The first n-1 arguments are keys to properties on the object.
-   * The nth argument is a function.
-   *
-   * The function will be called with the values stored at each of the keys.
-   * The order of the keys provided will be preserved when they are passed to the function.
-   * Inside the provided function `this` is the parent object.
-   *
-   * Ex:
-   *
-   *    total: Ember.computed.fn( 'amount', 'fee', 'tax', function(amount, fee, tax){
-   *      return amount + fee + tax;
-   *    }
-   */
-  fn() {
-    var fn = arguments[arguments.length - 1],
-        dependentKeys = Array.prototype.slice.call(arguments, 0, -1),
-        computedArgs = dependentKeys.slice();
-
-    computedArgs.push( function(){
-      return fn.apply(this, dependentKeys.map( (key) => { return this.get(key); }));
-    });
-
-    return Ember.computed.apply(Ember, computedArgs);
-  },
-
-  /**
    * Returns the first item in the target colelction with a property
    * at key matching the provided value
    *
@@ -87,7 +60,6 @@ export default {
     });
   },
 
-
   /**
    * Iterates the collection and uses the values at selector
    * as keys to populate a hashtable containing the items.
@@ -118,10 +90,47 @@ export default {
     });
   },
 
+  /**
+   * Tests that the value at `dependentKey` is not equal to the provided value.
+   *
+   * city: 'Montreal',
+   * isMontreal: Ember.computed.equal('city', 'Montreal')
+   * isNotMontreal: Ember.computed.notEqual('city', 'Montreal')
+   *
+   * // isMontreal is true
+   * // isNotMontreal is false
+   */
   notEqual(dependentKey, value) {
     Ember.assert(value, "notEqual requires a value for comparison");
     return Ember.computed(dependentKey, function() {
       return this.get(dependentKey) !== value;
     });
+  },
+
+  /**
+   * Takes an unlimited number of arguments. (key, key, key, ... , fn)
+   * The first n-1 arguments are keys to properties on the object.
+   * The nth argument is a function.
+   *
+   * The function will be called with the values stored at each of the keys.
+   * The order of the keys provided will be preserved when they are passed to the function.
+   * Inside the provided function `this` is the parent object.
+   *
+   * Ex:
+   *
+   *    total: Ember.computed.fn( 'amount', 'fee', 'tax', function(amount, fee, tax){
+   *      return amount + fee + tax;
+   *    }
+   */
+  fn() {
+    var fn = arguments[arguments.length - 1],
+        dependentKeys = Array.prototype.slice.call(arguments, 0, -1),
+        computedArgs = dependentKeys.slice();
+
+    computedArgs.push( function(){
+      return fn.apply(this, dependentKeys.map( (key) => { return this.get(key); }));
+    });
+
+    return Ember.computed.apply(Ember, computedArgs);
   }
 };
