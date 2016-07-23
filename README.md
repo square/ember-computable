@@ -1,4 +1,4 @@
-# Ember-cli-reactive-properties
+# ember-cli-computable
 
 This README outlines the details of collaborating on this Ember addon.
 

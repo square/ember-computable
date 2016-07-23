@@ -2,5 +2,5 @@
 'use strict';
 
 module.exports = {
-  name: 'ember-cli-reactive-properties'
+  name: 'ember-cli-computable'
 };

@@ -1,7 +1,7 @@
 {
-  "name": "ember-cli-reactive-properties",
-  "version": "0.0.0",
-  "description": "The default blueprint for ember-cli addons.",
+  "name": "ember-cli-computable",
+  "version": "0.0.1",
+  "description": "Computed Properties",
   "directories": {
     "doc": "doc",
     "test": "tests"
@@ -15,12 +15,12 @@
   "engines": {
     "node": ">= 0.10.0"
   },
-  "author": "",
-  "license": "MIT",
+  "author": "Terrill Dent",
+  "license": "© Square, Inc.",
   "devDependencies": {
     "broccoli-asset-rev": "^2.4.2",
     "ember-ajax": "^2.0.1",
-    "ember-cli": "2.6.2",
+    "ember-cli": "^2.6.3",
     "ember-cli-app-version": "^1.0.0",
     "ember-cli-dependency-checker": "^1.2.0",
     "ember-cli-htmlbars": "^1.0.3",
@@ -40,7 +40,11 @@
     "loader.js": "^4.0.1"
   },
   "keywords": [
-    "ember-addon"
+    "ember-addon",
+    "computed",
+    "properties",
+    "reactive",
+    "compose"
   ],
   "dependencies": {
     "ember-cli-babel": "^5.1.6"
