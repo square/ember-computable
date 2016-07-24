@@ -1,5 +1,6 @@
 import Ember from 'ember';
 import Computable from 'ember-cli-computable/utils/computable';
+import Composable from 'ember-cli-computable/utils/composable';
 import { module, test } from 'qunit';
 
 module('Unit | Utils | Computable.ifElse');
@@ -199,7 +200,7 @@ test('Gracefully handles empty target array', function(assert) {
 });
 
 
-module('Unit | Utils | Computable.contains');
+module('Unit | Utils | Computable.includes');
 
 test('Indexes by single level selector', function(assert) {
   var component = Ember.Component.extend({
@@ -208,8 +209,8 @@ test('Indexes by single level selector', function(assert) {
       'two',
       'three'
     ]),
-    hasThree: Computable.contains('participants', 'three'),
-    hasFour: Computable.contains('participants', 'four')
+    hasThree: Computable.includes('participants', 'three'),
+    hasFour: Computable.includes('participants', 'four')
   }).create();
 
   assert.equal(component.get('hasThree'), true);
@@ -219,7 +220,7 @@ test('Indexes by single level selector', function(assert) {
 test('Gracefully handles empty target array', function(assert) {
   var component = Ember.Component.extend({
     participants: Ember.A([]),
-    hasFour: Computable.contains('participants', 'four')
+    hasFour: Computable.includes('participants', 'four')
   }).create();
   assert.equal(component.get('hasFour'), false);
 });
@@ -246,3 +247,79 @@ test('handles undefined values', function(assert) {
   }).create();
   assert.equal(component.get('notEqual'), true);
 });
+
+
+module('Unit | Utils | Computable.compose');
+
+test('Should resolve the dependent keys', function(assert) {
+  var component = Ember.Component.extend({
+    numerator: 6,
+    denominator: 2,
+    result: Computable.compose('numerator', 'denominator', function(numerator, denominator){
+      return numerator/denominator;
+    })
+  }).create();
+  assert.equal(component.get('result'), 3);
+});
+
+test('Should resolve many dependent keys', function(assert) {
+  var component = Ember.Component.extend({
+    a: 'the',
+    b: 'quick',
+    c: 'brown',
+    d: 'fox',
+    e: 'jumps',
+    sentence: Computable.compose('a', 'b', 'c', 'd', 'e', function(){
+      return Array.prototype.slice.call(arguments).join(' ');
+    })
+  }).create();
+  assert.equal(component.get('sentence'), 'the quick brown fox jumps');
+});
+
+test('Should have correct `this` scope inside function', function(assert) {
+  var component = Ember.Component.extend({
+    a: 'the',
+    b: 'quick',
+    c: 'brown',
+    sentence: Computable.compose('a', 'b', function(){
+      return this.get('c');
+    })
+  }).create();
+  assert.equal(component.get('sentence'), 'brown');
+});
+
+test('Should handle multiple composed functions', function(assert) {
+  var component = Ember.Component.extend({
+    participants: [
+      {
+        name: 'Alice',
+        id: 1492
+      },
+      {
+        name: 'Bob',
+        id: 1493
+      },
+      {
+        name: 'Eve',
+        id: 1494
+      },
+      {
+        name: 'Dave',
+        id: 1495
+      },
+      {
+        name: 'Eve',
+        id: 1496
+      }
+    ],
+    beforeSignupChange: Computable.compose('participants',
+      Composable.mapBy('name'),
+      Composable.filter((participant) => {
+        return participant.id <= 1494;
+      }))
+  }).create();
+  assert.equal(component.get('beforeSignupChange'), [
+    'Alice', 'Bob', 'Eve'
+  ]);
+});
+

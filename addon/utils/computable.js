@@ -50,13 +50,13 @@ export default {
    *
    * Ex:
    *
-   *    instrument: Ember.computed.findBy('supported_instrument_types', 'DEBIT_CARD'),
+   *    instrument: Ember.computed.includes('supported_instrument_types', 'DEBIT_CARD'),
    *
    */
-  contains(collectionKey, value) {
+  includes(collectionKey, value) {
     return Ember.computed(collectionKey, function(){
       var collection = this.get(collectionKey);
-      return collection && collection.contains(value);
+      return collection && collection.includes(value);
     });
   },
 
@@ -131,6 +131,32 @@ export default {
       return fn.apply(this, dependentKeys.map( (key) => { return this.get(key); }));
     });
 
+    return Ember.computed.apply(Ember, computedArgs);
+  },
+
+  /**
+   * Compose multiple functions together.
+   * Functions are evaluated from right to left.
+   * The values of the dependent keys are passed to the rightmost function.
+   * The result from each function is passed to the next function, and the final
+   * result is the value the computed property takes on.
+   */
+  compose() {
+    var args = Array.prototype.slice.call(arguments),
+        dependentKeys = args.filter(function(arg){ return typeof arg === 'string'; }),
+        computedArgs = dependentKeys.slice(),
+        composedFns = args.slice(dependentKeys.length);
+
+    computedArgs.push(function(){
+      var i = composedFns.length - 1,
+          intermediate;
+
+      intermediate = composedFns[i].apply(this, dependentKeys.map( (key) => { return this.get(key); }));
+      while (i > 0) {
+        intermediate = composedFns[i--].call(this, intermediate);
+      }
+      return intermediate;
+    });
     return Ember.computed.apply(Ember, computedArgs);
   }
 };
