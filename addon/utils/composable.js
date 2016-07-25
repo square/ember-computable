@@ -2,6 +2,10 @@
 export default {
 
 
+  argsToArray: function() {
+    return Array.prototype.slice.call(arguments);
+  },
+
   identity: function(arg) {
     return arg;
   },
@@ -36,6 +40,7 @@ export default {
 
   mapBy: function(key) {
     return function(collection) {
+      console.log(collection);
       return collection.mapBy(key);
     };
   },

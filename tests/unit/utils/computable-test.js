@@ -269,9 +269,7 @@ test('Should resolve many dependent keys', function(assert) {
     c: 'brown',
     d: 'fox',
     e: 'jumps',
-    sentence: Computable.compose('a', 'b', 'c', 'd', 'e', function(){
-      return Array.prototype.slice.call(arguments).join(' ');
-    })
+    sentence: Computable.compose('a', 'b', 'c', 'd', 'e', Composable.join(' '), Composable.argsToArray)
   }).create();
   assert.equal(component.get('sentence'), 'the quick brown fox jumps');
 });
@@ -318,8 +316,22 @@ test('Should handle multiple composed functions', function(assert) {
         return participant.id <= 1494;
       }))
   }).create();
-  assert.equal(component.get('beforeSignupChange'), [
-    'Alice', 'Bob', 'Eve'
-  ]);
+  var result = component.get('beforeSignupChange');
+  assert.equal(result.length, 3, 'Has three items');
+  assert.equal(result[0], 'Alice');
+  assert.equal(result[1], 'Bob');
+  assert.equal(result[2], 'Eve');
+});
+
+test('Should handle multiple composed functions 2', function(assert) {
+  var component = Ember.Component.extend({
+    initiated_at: '533995200000',
+    initiated_at_friendly: Computable.compose('initiated_at',
+      function(dateInt) {
+        return new Date(dateInt).toString();
+      },
+      Composable.parseInt(10))
+  }).create();
+  assert.equal(component.get('initiated_at_friendly'), 'Wed Dec 03 1986 07:00:00 GMT-0500 (EST)');
 });
 

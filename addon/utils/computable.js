@@ -1,5 +1,8 @@
 import Ember from 'ember';
 
+// Opt-in to native array extensions
+Ember.NativeArray.apply(Array.prototype);
+
 /**
  * Helper functions similar to Ember.computed helpers
  */
@@ -152,8 +155,8 @@ export default {
           intermediate;
 
       intermediate = composedFns[i].apply(this, dependentKeys.map( (key) => { return this.get(key); }));
-      while (i > 0) {
-        intermediate = composedFns[i--].call(this, intermediate);
+      while (i--) {
+        intermediate = composedFns[i].call(this, intermediate);
       }
       return intermediate;
     });
