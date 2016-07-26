@@ -1,8 +1,8 @@
 # ember-cli-computable
 
 This library two parts:
-* `Computable` - a set of Computable Property extensions.
-* `Composable` - a set of curried and partially applied functions that can be used with the `Computable.fn()` and `Computable.compose()` functions.
+* `Computable` - a set of Computable Property extensions applied to Ember.computed.
+* `Composable` - a set of curried and partially applied functions that can be used with `Computable.compose()`.
 
 ---
 ## Computable
@@ -41,7 +41,6 @@ Tests that the value at `dependentKey` is not equal to the provided value.
 
 ## Composable
 
-These functions do not take arguments and can be used in composition directly.
 
 #### .argsToArray
 
@@ -58,8 +57,6 @@ Returns the inverse truthy/falsy value of the provided argument.
 #### .compact
 
 Iterates an array and returns a new array that does not contain null or undefined elements.
-
----
 
 #### .filter(filterFn)
 
@@ -102,27 +99,56 @@ Returns a partial fn that runs the provided regular expression replacement on a 
 ---
 ## Examples
 
+Calling a utility method with the same value as you're dependent on:
+
+```
+paymentComplete: Ember.computed('payment.state', function() {  
+    return Utils.isSuccessfulPayment(this.get('payment.state'));
+}
+```
+
+Reduces to directly providing the function.
+
+```
+paymentComplete: Ember.computed.fn('payment.state', Utils.isSuccessfulPayment)
+```
+
+#### Multiple Composed Functions
+
+This example converts a function that calls two functions in sequence:
+
 ```
   date: Ember.computed('transaction.initiated_at', function() {
     let date = parseInt(this.get('transaction.initiated_at'), 10);
     return moment(date);
-  }),
+  })
 ```
+
+Into two composed functions that are evaluated in reverse order:
 
 ```
   date: Ember.computed.compose('transaction.initiated_at', moment, comp.parseInt(10))
 ```
 
+#### Multiple dependencies
+
+Previously multiple dependencies required a lot of boilerplate getter code.
+
 ```
-  singleLineAddress: Ember.computed.fn(
+  singleLineAddress: Ember.computed(
       'model.address_line_1',
       'model.address_line_2',
       'model.locality',
       'model.administrative_district_level_1',
       'model.postal_code',
     function() {
-      // Trim each part, remove trailing commas, join non-null parts with comma+space
-      return Array.prototype.map.call(arguments, function(part) {
+      [
+        this.get('model.address_line_1'),
+        this.get('model.address_line_2'),
+        this.get('model.locality'),,
+        this.get('model.administrative_district_level_1'),
+        this.get('model.postal_code'),
+      ].map(function(part) {
           return part && part.trim().replace(/(,$)/g, '');
         }).filter(function(part) {
           return part;
@@ -130,6 +156,8 @@ Returns a partial fn that runs the provided regular expression replacement on a 
     }
   ),
 ```
+
+Now the dependencies are passed directly to the composed function. We can combine many small partial functions together into a series of composed functions:
 
 ```
   singleLineAddress: Ember.computed.compose(
@@ -143,8 +171,6 @@ Returns a partial fn that runs the provided regular expression replacement on a 
     comp.map(comp.replace(/^\s+|,?\s+$/g, ''))),
 ```
 
-
----
 ## Installation
 
 * `git clone` this repository
