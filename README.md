@@ -1,7 +1,54 @@
 # ember-cli-computable
 
-This README outlines the details of collaborating on this Ember addon.
+This library two parts:
+* `Computable` - a set of Computable Property extensions.
+* `Composable` - a set of curried and partially applied functions that can be used with the `Computable.fn()` and `Computable.compose()` functions.
 
+---
+## Computable
+
+#### .compose(dependentKey, [dependentKey, ] [fn, ] fn1)
+
+#### .ifElse(dependentKey, value, elseValue)
+
+#### .ifElseKeys(dependentKey, key, elseKey)
+
+#### .includes(collectionKey, value)
+
+#### .indexBy(collectionKey, selector)
+
+#### .findBy(collectionKey, key, value)
+
+#### .notEqual(dependentKey, value)
+
+---
+
+## Composable
+
+#### .argsToArray
+
+#### .identity
+
+#### .not
+
+#### .compact
+
+---
+
+#### .filter(filterFn)
+
+#### .filterBy(key, value)
+
+#### .join(separator)
+
+#### .mapBy(key)
+
+#### .parseInt(radix)
+
+#### .replace(regex, replacement)
+
+
+---
 ## Examples
 
 ```
@@ -46,6 +93,7 @@ This README outlines the details of collaborating on this Ember addon.
 ```
 
 
+---
 ## Installation
 
 * `git clone` this repository

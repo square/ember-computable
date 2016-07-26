@@ -29,24 +29,6 @@ export default {
   },
 
   /**
-   * Returns the first item in the target colelction with a property
-   * at key matching the provided value
-   *
-   * Note: This is an O(n) operation, it should not be used with large collections
-   *
-   * Ex:
-   *
-   *    instrument: Ember.computed.findBy('instruments', 'type', 'DEBIT_CARD'),
-   *
-   */
-  findBy(collectionKey, key, value) {
-    return Ember.computed(collectionKey, function(){
-      var collection = this.get(collectionKey);
-      return collection && Ember.A(collection).findBy(key, value);
-    });
-  },
-
-  /**
    * Returns true if the provided value is in the enumerable collection
    *
    * Note: This is an O(n) operation, it should not be used with large collections
@@ -77,9 +59,9 @@ export default {
    *  }
    *
    */
-  indexBy(dependentKey, selector) {
-    return Ember.computed(dependentKey, function(){
-      var collection = this.get(dependentKey),
+  indexBy(collectionKey, selector) {
+    return Ember.computed(collectionKey, function(){
+      var collection = this.get(collectionKey),
           result = {};
       if (collection && typeof collection.forEach === 'function'){
         collection.forEach(function(item){
@@ -90,6 +72,24 @@ export default {
         });
       }
       return result;
+    });
+  },
+
+  /**
+   * Returns the first item in the target colelction with a property
+   * at key matching the provided value
+   *
+   * Note: This is an O(n) operation, it should not be used with large collections
+   *
+   * Ex:
+   *
+   *    instrument: Ember.computed.findBy('instruments', 'type', 'DEBIT_CARD'),
+   *
+   */
+  findBy(collectionKey, key, value) {
+    return Ember.computed(collectionKey, function(){
+      var collection = this.get(collectionKey);
+      return collection && Ember.A(collection).findBy(key, value);
     });
   },
 
