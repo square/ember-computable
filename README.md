@@ -9,9 +9,25 @@ This library two parts:
 
 #### .compose(dependentKey, [dependentKey, ] [fn, ] fn1)
 
-Multiple dependencies can be used as direct input to a set of composed functions.
+Compose multiple arguments and functions together.
 
-The values of the dependent keys are passed to the rightmost function. Functions are then evaluated from right to left, passing the intermediate result on to the next.
+The leading string arguments are dependent keys. The values of the dependent keys are evaluated at runtime and passed to the rightmost function (`fn1`).
+
+The remaining arguments are functions that get evaluated right to left, a process called 'composition'. The result from each function is passed to the next function, and the final
+result is the value the computed property takes on.
+
+- The order of the keys provided is preserved.
+- Inside the provided functions `this` is the parent object.
+
+```
+   formattedTotal: Ember.computed.fn( 'amount', 'fee', 'tax',
+     function(total) {
+       return `$${total}`;
+     },
+     function(amount, fee, tax){
+       return amount + fee + tax;
+     })
+```
 
 #### .ifElse(dependentKey, value, elseValue)
 
@@ -32,6 +48,10 @@ Iterates a collection of objects and uses the attributes at `selector` of each a
 #### .findBy(collectionKey, key, value)
 
 Returns the first item in the target collection with a property at key matching the provided value
+
+#### .fn(dependentKey, [dependentKey, ] [fn, ] fn1)
+
+`fn()` is an alias for `.compose()`
 
 #### .notEqual(dependentKey, value)
 

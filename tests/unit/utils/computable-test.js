@@ -54,46 +54,6 @@ test('Should handle undefined keys', function(assert) {
 });
 
 
-module('Unit | Utils | Computable.fn');
-
-test('Should resolve the dependent keys', function(assert) {
-  var component = Ember.Component.extend({
-    numerator: 6,
-    denominator: 2,
-    result: Computable.fn('numerator', 'denominator', function(numerator, denominator){
-      return numerator/denominator;
-    })
-  }).create();
-  assert.equal(component.get('result'), 3);
-});
-
-test('Should resolve many dependent keys', function(assert) {
-  var component = Ember.Component.extend({
-    a: 'the',
-    b: 'quick',
-    c: 'brown',
-    d: 'fox',
-    e: 'jumps',
-    sentence: Computable.fn('a', 'b', 'c', 'd', 'e', function(){
-      return Array.prototype.slice.call(arguments).join(' ');
-    })
-  }).create();
-  assert.equal(component.get('sentence'), 'the quick brown fox jumps');
-});
-
-test('Should have correct `this` scope inside function', function(assert) {
-  var component = Ember.Component.extend({
-    a: 'the',
-    b: 'quick',
-    c: 'brown',
-    sentence: Computable.fn('a', 'b', function(){
-      return this.get('c');
-    })
-  }).create();
-  assert.equal(component.get('sentence'), 'brown');
-});
-
-
 module('Unit | Utils | Computable.findBy');
 
 test('Should find the requested item', function(assert) {
@@ -270,8 +230,10 @@ test('Should resolve many dependent keys', function(assert) {
     d: 'fox',
     e: 'jumps',
     sentence: Computable.compose('a', 'b', 'c', 'd', 'e', Composable.join(' '), Composable.argsToArray)
+    sentenceFn: Computable.fn('a', 'b', 'c', 'd', 'e', Composable.join(' '), Composable.argsToArray)
   }).create();
   assert.equal(component.get('sentence'), 'the quick brown fox jumps');
+  assert.equal(component.get('sentenceFn'), 'the quick brown fox jumps');
 });
 
 test('Should have correct `this` scope inside function', function(assert) {

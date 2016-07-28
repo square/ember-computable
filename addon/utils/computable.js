@@ -6,7 +6,7 @@ Ember.NativeArray.apply(Array.prototype);
 /**
  * Helper functions similar to Ember.computed helpers
  */
-export default {
+var Computable = {
 
   /**
    * If the value stored at the dependentKey evaluates to true
@@ -41,7 +41,9 @@ export default {
   includes(collectionKey, value) {
     return Ember.computed(collectionKey, function(){
       var collection = this.get(collectionKey);
-      return collection && collection.includes(value);
+      return collection && 
+        (collection.includes && collection.includes(value)) ||
+        (collection.contains && collection.contains(value));
     });
   },
 
@@ -111,38 +113,29 @@ export default {
   },
 
   /**
-   * Takes an unlimited number of arguments. (key, key, key, ... , fn)
-   * The first n-1 arguments are keys to properties on the object.
-   * The nth argument is a function.
+   * Compose multiple arguments and functions together.
    *
-   * The function will be called with the values stored at each of the keys.
-   * The order of the keys provided will be preserved when they are passed to the function.
-   * Inside the provided function `this` is the parent object.
+   * Takes an unlimited number of args and fns. (key, [dependentKey, ] [fn, ] fn)
+   * The first m string arguments are dependent keys.
+   * The remaining arguments are functions that get evaluated right to left
+   * which is often called `compose`.
    *
-   * Ex:
-   *
-   *    total: Ember.computed.fn( 'amount', 'fee', 'tax', function(amount, fee, tax){
-   *      return amount + fee + tax;
-   *    }
-   */
-  fn() {
-    var fn = arguments[arguments.length - 1],
-        dependentKeys = Array.prototype.slice.call(arguments, 0, -1),
-        computedArgs = dependentKeys.slice();
-
-    computedArgs.push( function(){
-      return fn.apply(this, dependentKeys.map( (key) => { return this.get(key); }));
-    });
-
-    return Ember.computed.apply(Ember, computedArgs);
-  },
-
-  /**
-   * Compose multiple functions together.
-   * Functions are evaluated from right to left.
    * The values of the dependent keys are passed to the rightmost function.
    * The result from each function is passed to the next function, and the final
    * result is the value the computed property takes on.
+   *
+   * - The order of the keys provided is preserved.
+   * - Inside the provided functions `this` is the parent object.
+   *
+   * Ex:
+   *
+   *    formattedTotal: Ember.computed.fn( 'amount', 'fee', 'tax',
+   *      function(total) {
+   *        return `$${total}`;
+   *      },
+   *      function(amount, fee, tax){
+   *        return amount + fee + tax;
+   *      })
    */
   compose() {
     var args = Array.prototype.slice.call(arguments),
@@ -163,3 +156,11 @@ export default {
     return Ember.computed.apply(Ember, computedArgs);
   }
 };
+
+// Alias the includes functino to `contains`
+Computable.contains = Computable.includes;
+
+// Alias the compose function to `fn`
+Computable.fn = Computable.compose;
+
+export default Computable;
