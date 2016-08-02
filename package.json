@@ -1,6 +1,6 @@
 {
   "name": "ember-cli-computable",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Computed Properties",
   "directories": {
     "doc": "doc",

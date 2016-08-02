@@ -39,7 +39,6 @@ export default {
 
   mapBy: function(key) {
     return function(collection) {
-      console.log(collection);
       return collection.mapBy(key);
     };
   },
