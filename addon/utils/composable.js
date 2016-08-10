@@ -5,6 +5,10 @@ export default {
     return Array.prototype.slice.call(arguments);
   },
 
+  compact: function(arg) {
+    return arg.filter(this.identity);
+  },
+
   identity: function(arg) {
     return arg;
   },
@@ -13,11 +17,23 @@ export default {
     return !arg;
   },
 
-  compact: function(arg) {
-    return arg.filter(arg);
-  },
-
   // Curried and Partially Evaluated Fns
+
+  compose: function() {
+    var composedFns = Array.prototype.slice.call(arguments);
+
+    return function(){
+      var args = Array.prototype.slice.call(arguments),
+          i = composedFns.length - 1,
+          intermediate;
+
+      intermediate = composedFns[i].apply(this, args);
+      while (i--) {
+        intermediate = composedFns[i].call(this, intermediate);
+      }
+      return intermediate;
+    };
+  },
 
   filter: function(fn) {
     return function(collection) {

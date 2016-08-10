@@ -229,7 +229,7 @@ test('Should resolve many dependent keys', function(assert) {
     c: 'brown',
     d: 'fox',
     e: 'jumps',
-    sentence: Computable.compose('a', 'b', 'c', 'd', 'e', Composable.join(' '), Composable.argsToArray)
+    sentence: Computable.compose('a', 'b', 'c', 'd', 'e', Composable.join(' '), Composable.argsToArray),
     sentenceFn: Computable.fn('a', 'b', 'c', 'd', 'e', Composable.join(' '), Composable.argsToArray)
   }).create();
   assert.equal(component.get('sentence'), 'the quick brown fox jumps');

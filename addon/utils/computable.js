@@ -1,4 +1,5 @@
 import Ember from 'ember';
+import Composable from './composable';
 
 // Opt-in to native array extensions
 Ember.NativeArray.apply(Array.prototype);
@@ -41,7 +42,7 @@ var Computable = {
   includes(collectionKey, value) {
     return Ember.computed(collectionKey, function(){
       var collection = this.get(collectionKey);
-      return collection && 
+      return collection &&
         (collection.includes && collection.includes(value)) ||
         (collection.contains && collection.contains(value));
     });
@@ -141,17 +142,10 @@ var Computable = {
     var args = Array.prototype.slice.call(arguments),
         dependentKeys = args.filter(function(arg){ return typeof arg === 'string'; }),
         computedArgs = dependentKeys.slice(),
-        composedFns = args.slice(dependentKeys.length);
+        composedFn = Composable.compose.apply(this, args.slice(dependentKeys.length));
 
     computedArgs.push(function(){
-      var i = composedFns.length - 1,
-          intermediate;
-
-      intermediate = composedFns[i].apply(this, dependentKeys.map( (key) => { return this.get(key); }));
-      while (i--) {
-        intermediate = composedFns[i].call(this, intermediate);
-      }
-      return intermediate;
+      return composedFn.apply(this, dependentKeys.map( (key) => { return this.get(key); }));
     });
     return Ember.computed.apply(Ember, computedArgs);
   }
