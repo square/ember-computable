@@ -43,8 +43,7 @@ var Computable = {
     return Ember.computed(collectionKey, function(){
       var collection = this.get(collectionKey);
       return collection &&
-        (collection.includes && collection.includes(value)) ||
-        (collection.contains && collection.contains(value));
+        ((collection.includes && collection.includes(value)) || (collection.contains && collection.contains(value)));
     });
   },
 
