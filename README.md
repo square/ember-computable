@@ -122,7 +122,7 @@ Returns a partial fn that runs the provided regular expression replacement on a 
 Calling a utility method with the same value as you're dependent on:
 
 ```
-paymentComplete: Ember.computed('payment.state', function() {  
+paymentComplete: Ember.computed('payment.state', function() {
     return Utils.isSuccessfulPayment(this.get('payment.state'));
 }
 ```
@@ -190,6 +190,23 @@ Now the dependencies are passed directly to the composed function. We can combin
     comp.compact,
     comp.map(comp.replace(/^\s+|,?\s+$/g, ''))),
 ```
+
+## Publishing New Versions
+
+1) Update package.json and increment the version number.
+2) Commit all your changes.
+3) Tag the new version. If it is version `v0.0.4` then the command is:
+
+    ```
+    git tag -a v0.0.4 -m "contains/include fix"
+    ```
+
+4) Push the tag to the server.
+
+    ```
+    git push origin v0.0.4
+    ```
+
 
 ## Installation
 
