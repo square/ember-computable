@@ -1,7 +1,7 @@
 {
   "name": "ember-cli-computable",
   "version": "0.0.4",
-  "description": "Computed Properties",
+  "description": "Computed Properties extension for Ember. Adds more functional programming capabilities to computed properties.",
   "directories": {
     "doc": "doc",
     "test": "tests"
@@ -15,8 +15,8 @@
   "engines": {
     "node": ">= 0.10.0"
   },
-  "author": "Terrill Dent",
-  "license": "© Square, Inc.",
+  "author": "Terrill Dent <tdent@squareup.com>",
+  "license": "Apache-2.0",
   "devDependencies": {
     "broccoli-asset-rev": "^2.4.2",
     "ember-ajax": "^2.0.1",

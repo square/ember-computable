@@ -1,15 +1,17 @@
 # ember-cli-computable
 
-This library two parts:
+This library has two parts:
 * `Computable` - a set of Computable Property extensions applied to Ember.computed.
-* `Composable` - a set of curried and partially applied functions that can be used with `Computable.compose()`.
+* `Composable` - a set of curried and partially applied functions that can be used with the new `Ember.computed.compose()`.
 
 ---
 ## Computable
 
 #### .compose(dependentKey, [dependentKey, ] [fn, ] fn1)
 
-Compose multiple arguments and functions together.
+Aliased to `.fn()`
+
+Composes multiple arguments and functions together.
 
 The leading string arguments are dependent keys. The values of the dependent keys are evaluated at runtime and passed to the rightmost function (`fn1`).
 
@@ -51,7 +53,7 @@ Returns the first item in the target collection with a property at key matching 
 
 #### .fn(dependentKey, [dependentKey, ] [fn, ] fn1)
 
-`fn()` is an alias for `.compose()`
+`.fn()` is an alias for `.compose()`
 
 #### .notEqual(dependentKey, value)
 
