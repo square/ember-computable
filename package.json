@@ -1,5 +1,5 @@
 {
-  "name": "ember-cli-computable",
+  "name": "ember-computable",
   "version": "0.0.4",
   "description": "Computed Properties extension for Ember. Adds more functional programming capabilities to computed properties.",
   "directories": {
