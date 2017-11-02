@@ -5,7 +5,7 @@ This library has two parts:
 * `Composable` - a set of curried and partially applied functions that can be used with `Ember.computed.fn()`.
 
 ---
-## Examples
+### Quick Example
 
 
 Allows you to start with this:
@@ -30,24 +30,6 @@ amount: Ember.computed.fn('isSender', 'paymentAmount',
     return `${direction}${paymentAmount}`;
   }
 ),
-```
-
-
-
-Original Ember Code
-
-```
-statusIcon: Ember.computed('payment.state', function(){
-  var state = this.get('payment.state');
-  return STATE_ICONS[state] || STATE_ICONS.UNKNOWN;
-}),
-```
-
-Rewritten as:
-
-```
-statusIcon: Ember.computed.fn('payment.state',
-  _c.lookupKey(STATE_ICONS, STATE_ICONS.UNKNOWN)),
 ```
 
 ---
@@ -126,6 +108,15 @@ Returns the inverse truthy/falsy value of the provided argument.
 
 Iterates an array and returns a new array that does not contain null or undefined elements.
 
+#### .default(defaultValue)
+
+- @param `defaultValue` - a default value that will be returned by the returned function if called with a falsy value.
+- @returns `fn(value) -> value || defaultValue`
+
+```
+   stateImageUrl: Ember.computed.fn('state', _c.default('not_found.png'), _c.lookupKey(STATE_IMAGE_MAP))
+```
+
 #### .filter(filterFn)
 
 Returns a partially evaluated function that will filter an array using the provided filter function.
@@ -145,6 +136,12 @@ Returns a partial fn that will filter an array by the `key` and `value` provided
 
 - @param `separator` - the separator to be applied
 - @returns `fn(array) -> string`
+
+#### .lookupKey(map, defaultValue)
+
+- @param `map` - A map `{}` that maps keys to values.
+- @param `defaultValue` - if the key is not found in the map, this value is returned.
+- @returns `fn(key) -> map[key]` - return the value at `map[key]`.
 
 #### .mapBy(key)
 
