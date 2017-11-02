@@ -35,6 +35,12 @@ export default {
     };
   },
 
+  default: function(defaultValue) {
+    return function(runtimeValue) {
+      return runtimeValue || defaultValue;
+    };
+  },
+
   filter: function(fn) {
     return function(collection) {
       return collection.filter(fn);
@@ -50,6 +56,12 @@ export default {
   join: function(separator) {
     return function(arg) {
       return arg.join(separator);
+    };
+  },
+
+  lookupKey: function(map, defaultValue) {
+    return function(key) {
+      return map[key] || defaultValue;
     };
   },
 

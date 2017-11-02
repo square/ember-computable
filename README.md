@@ -1,11 +1,57 @@
-# ember-cli-computable
+# ember-computable
 
 This library has two parts:
 * `Computable` - a set of Computable Property extensions applied to Ember.computed.
-* `Composable` - a set of curried and partially applied functions that can be used with the new `Ember.computed.compose()`.
+* `Composable` - a set of curried and partially applied functions that can be used with `Ember.computed.fn()`.
 
 ---
-## Computable
+## Examples
+
+
+Allows you to start with this:
+
+```
+amount: Ember.computed('isSender', 'paymentAmount',
+  function(){
+    var isSender  = this.get('isSender'),
+        amount    = this.get('paymentAmount'),
+        direction = isSender ? '-' : '';
+    return `${direction}${amount}`;
+  }
+),
+```
+
+Rewritten as:
+
+```
+amount: Ember.computed.fn('isSender', 'paymentAmount',
+  function(isSender, paymentAmount){
+    var direction = isSender ? '-' : '';
+    return `${direction}${paymentAmount}`;
+  }
+),
+```
+
+
+
+Original Ember Code
+
+```
+statusIcon: Ember.computed('payment.state', function(){
+  var state = this.get('payment.state');
+  return STATE_ICONS[state] || STATE_ICONS.UNKNOWN;
+}),
+```
+
+Rewritten as:
+
+```
+statusIcon: Ember.computed.fn('payment.state',
+  _c.lookupKey(STATE_ICONS, STATE_ICONS.UNKNOWN)),
+```
+
+---
+## Computable - Computed Property Extensions
 
 #### .compose(dependentKey, [dependentKey, ] [fn, ] fn1)
 
@@ -19,7 +65,7 @@ The remaining arguments are functions that get evaluated right to left, a proces
 result is the value the computed property takes on.
 
 - The order of the keys provided is preserved.
-- Inside the provided functions `this` is the parent object.
+- Inside the provided functions `this` is the parent object of the computed property.
 
 ```
    formattedTotal: Ember.computed.fn( 'amount', 'fee', 'tax',
@@ -61,7 +107,7 @@ Tests that the value at `dependentKey` is not equal to the provided value.
 
 ---
 
-## Composable
+## Composable - Helper functions
 
 
 #### .argsToArray

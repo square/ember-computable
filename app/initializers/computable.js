@@ -1,4 +1,4 @@
-import Computable from 'ember-cli-computable/utils/computable';
+import Computable from 'ember-computable/utils/computable';
 const { computed } = Ember;
 
 export function initialize() {

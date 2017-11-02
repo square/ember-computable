@@ -1,6 +1,6 @@
 import Ember from 'ember';
-import Computable from 'ember-cli-computable/utils/computable';
-import Composable from 'ember-cli-computable/utils/composable';
+import Computable from 'ember-computable/utils/computable';
+import Composable from 'ember-computable/utils/composable';
 import { module, test } from 'qunit';
 
 module('Unit | Utils | Computable.ifElse');
