@@ -1,3 +1,4 @@
+import Ember from 'ember';
 import Computable from 'ember-computable/utils/computable';
 const { computed } = Ember;
 
